@@ -8,6 +8,11 @@ import {
   DialogActions,
   Slide,
   Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
@@ -19,9 +24,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import TableData from "./TableData";
 import { connect } from "react-redux";
-import { fetchUsers } from "../redux";
+import { fetchUsers, deleteUser } from "../redux";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import MuiAlert from "@mui/material/Alert";
+import Paper from "@mui/material/Paper";
 
 function createData(id, name, age, mobile, address, modify) {
   return { id, name, age, mobile, address, modify };
@@ -35,14 +41,16 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const Details = ({ userData, fetchUsers1 }) => {
+const Details = ({ userData, fetchUsers1, delUser1 }) => {
   const [open, setOpen] = React.useState(false);
   const [openMessage, setOpenMessage] = React.useState(false);
   const [delId, setDelId] = useState("");
   let navigate = useNavigate();
 
   const handleDelete = () => {
+    delUser1(delId);
     console.log(delId);
+    setOpen(false);
   };
   const handleClose = () => {
     setOpen(false);
@@ -50,6 +58,7 @@ const Details = ({ userData, fetchUsers1 }) => {
   const handleClickOpen = (id) => {
     setDelId(id);
     setOpen(true);
+    console.log(id);
   };
   const handleCloseDelete = (event, reason) => {
     if (reason === "clickaway") {
@@ -93,7 +102,7 @@ const Details = ({ userData, fetchUsers1 }) => {
             </IconButton>
             <IconButton
               aria-label="delete"
-              onClick={() => handleClickOpen(row._id)}
+              onClick={() => handleClickOpen(row.id)}
             >
               <DeleteIcon color="error" />
             </IconButton>
@@ -131,6 +140,39 @@ const Details = ({ userData, fetchUsers1 }) => {
             </Link>
           </Stack>
           <TableData rows={rows} />
+          {/* <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="center">Age</TableCell>
+                  <TableCell align="center">Mobile</TableCell>
+                  <TableCell align="center">Address</TableCell>
+                  <TableCell align="center"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows
+                  ? rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="center">{row.age}</TableCell>
+                        <TableCell align="center">{row.mobile}</TableCell>
+                        <TableCell align="center">{row.address}</TableCell>
+                        <TableCell align="center">{row.modify}</TableCell>
+                      </TableRow>
+                    ))
+                  : ""}
+              </TableBody>
+            </Table>
+          </TableContainer> */}
 
           {/* Dialog Pop Up */}
           <Dialog
@@ -195,6 +237,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return { fetchUsers1: () => dispatch(fetchUsers()) };
+  return {
+    fetchUsers1: () => dispatch(fetchUsers()),
+    delUser1: () => dispatch(deleteUser()),
+  };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Details);

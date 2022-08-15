@@ -59,7 +59,8 @@ const deleteUserFailure = (err) => {
 };
 
 export const deleteUser = (delId) => {
-  const deleteURL = `http://192.168.1.143:8000/api/deleteProfile/${delId}`;
+  // const deleteURL = `http://192.168.1.143:8000/api/deleteProfile/${delId}`;
+  const deleteURL = `https://jsonplaceholder.typicode.com/users/${delId}`;
   console.log(delId);
   return (dispatch) => {
     axios
