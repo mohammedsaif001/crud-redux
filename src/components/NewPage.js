@@ -30,35 +30,32 @@ const NewPage = () => {
     event.preventDefault();
     let pathId = path.id;
     if (pathId) {
-      const [message, variant] = updateFunction(
-        pathId,
-        name,
-        age,
-        phone,
-        address,
-        navigate
-      );
-      enqueueSnackbar("message", { variant: "error" });
+      async function updateUser() {
+        let [message, variant] = await updateFunction(
+          pathId,
+          name,
+          age,
+          phone,
+          address,
+          navigate
+        );
+        enqueueSnackbar(message, { variant: variant });
+      }
+      updateUser();
     } else {
-      // let [message, variant] = createFunction(
-      //   name,
-      //   age,
-      //   phone,
-      //   address,
-      //   navigate
-      // );
-      // console.log(message, variant);
-      // enqueueSnackbar(message, { variant: variant });
-      // enqueueSnackbar("message", { variant: "error" });
-      let [message, variant] = createFunction(
-        name,
-        age,
-        phone,
-        address,
-        navigate
-      );
-      console.log("HEllo lorem23");
-      console.log(message, variant);
+      async function createUser() {
+        let [message, variant] = await createFunction(
+          name,
+          age,
+          phone,
+          address,
+          navigate
+        );
+        console.log("HEllo lorem23");
+        // console.log(message, variant);
+        enqueueSnackbar(message, { variant: variant });
+      }
+      createUser();
     }
   };
 

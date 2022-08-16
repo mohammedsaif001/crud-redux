@@ -1,9 +1,18 @@
 import axios from "axios";
 
-export const updateFunction = (pathId, name, age, phone, address, navigate) => {
+export const updateFunction = async (
+  pathId,
+  name,
+  age,
+  phone,
+  address,
+  navigate
+) => {
+  let message = "";
+  let variant = "";
   // const putURL = `https://jsonplaceholder.typicode.com/users/${pathId}`;
   const putURL = `http://192.168.1.124:8000/api/updateProfile/${pathId}`;
-  axios
+  await axios
     // .put(putURL, {
     //   name: name,
     //   username: age,
@@ -18,48 +27,42 @@ export const updateFunction = (pathId, name, age, phone, address, navigate) => {
       address: address,
     })
     .then((res) => {
-      let message = res.data.msg;
-      let variant = "success";
+      message = res.data.msg;
+      variant = "success";
       console.log(res);
       console.log(message);
       navigate("/");
-      return [message, variant];
+      return res;
     })
     .catch((err) => {
       let statusCode = err.response.data.status;
       if (statusCode === 409) {
-        let message = "User Already Exist";
-        let variant = "error";
-        return [message, variant];
+        message = "User Already Exist";
+        variant = "error";
+        return err;
       } else if (statusCode === 404) {
-        let message = "User Not Found";
-        let variant = "error";
-        return [message, variant];
+        message = "User Not Found";
+        variant = "error";
+        return err;
       } else if (statusCode === 500) {
-        let message = "Internal Server Error";
-        let variant = "alert";
-        return [message, variant];
+        message = "Internal Server Error";
+        variant = "alert";
+        return err;
       } else if (statusCode === 400) {
-        let message = err.response.data.data[0];
-        let variant = "error";
-        return [message, variant];
+        message = err.response.data.data[0];
+        variant = "error";
+        return err;
       }
     });
   console.log(name, age, typeof age, typeof phone, address);
+  return [message, variant];
 };
 
 export const createFunction = async (name, age, phone, address, navigate) => {
   const postURL = `http://192.168.1.124:8000/api/createProfile`;
-  // const postURL = `https://jsonplaceholder.typicode.com/users`;
   let message = "";
   let variant = "";
-  axios
-    // .post(postURL, {
-    //   name: name,
-    //   username: age,
-    //   phone: phone,
-    //   email: address,
-    // })
+  await axios
     .post(postURL, {
       name: name,
       age: age,
@@ -71,36 +74,35 @@ export const createFunction = async (name, age, phone, address, navigate) => {
       // let variant = "success";
       message = "User Inserted Successfully";
       variant = "success";
-      console.log(res);
-      console.log(message);
       navigate("/");
-      return [message, variant];
+      return res;
+
       // return `{enqueueSnackbar(${message}, { variant: ${variant} })}`;
     })
     .catch((err) => {
       let statusCode = err.response.data.status;
       if (statusCode === 409) {
-        let message = "User Already Exist";
-        let variant = "error";
+        message = "User Already Exist";
+        variant = "error";
         console.log(statusCode, message);
-        return [message, variant];
+        return err;
       } else if (statusCode === 404) {
-        let message = "User Not Found";
-        let variant = "error";
+        message = "User Not Found";
+        variant = "error";
         console.log(statusCode, message);
-        return [message, variant];
+        return err;
       } else if (statusCode === 500) {
-        let message = "Internal Server Error";
-        let variant = "alert";
+        message = "Internal Server Error";
+        variant = "alert";
         console.log(statusCode, message);
-        return [message, variant];
+        return err;
       } else if (statusCode === 400) {
-        let message = err.response.data.data[0];
-        let variant = "error";
+        message = err.response.data.data[0];
+        variant = "error";
         console.log(statusCode, message);
-        return [message, variant];
+        return err;
       }
     });
   console.log(name, typeof age, typeof phone, address);
-  // return [message, variant];
+  return [message, variant];
 };

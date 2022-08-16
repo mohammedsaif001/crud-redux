@@ -47,9 +47,10 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
   const [delId, setDelId] = useState("");
   let navigate = useNavigate();
 
-  const handleDelete = () => {
-    delUser1(delId);
+  const handleDelete = async () => {
+    let response = await delUser1(delId);
     console.log(delId);
+    console.log(response);
     setOpen(false);
   };
   const handleClose = () => {
