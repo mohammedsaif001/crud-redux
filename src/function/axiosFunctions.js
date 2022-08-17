@@ -10,16 +10,8 @@ export const updateFunction = async (
 ) => {
   let message = "";
   let variant = "";
-  // const putURL = `https://jsonplaceholder.typicode.com/users/${pathId}`;
-  const putURL = `http://192.168.1.124:8000/api/updateProfile/${pathId}`;
+  const putURL = `http://192.168.1.158:7000/api/updateProfile/${pathId}`;
   await axios
-    // .put(putURL, {
-    //   name: name,
-    //   username: age,
-    //   phone: phone,
-    //   email: address,
-    // })
-    // })
     .put(putURL, {
       name: name,
       age: age,
@@ -59,7 +51,7 @@ export const updateFunction = async (
 };
 
 export const createFunction = async (name, age, phone, address, navigate) => {
-  const postURL = `http://192.168.1.124:8000/api/createProfile`;
+  const postURL = `http://192.168.1.158:7000/api/createProfile`;
   let message = "";
   let variant = "";
   await axios
@@ -76,8 +68,6 @@ export const createFunction = async (name, age, phone, address, navigate) => {
       variant = "success";
       navigate("/");
       return res;
-
-      // return `{enqueueSnackbar(${message}, { variant: ${variant} })}`;
     })
     .catch((err) => {
       let statusCode = err.response.data.status;
@@ -105,4 +95,20 @@ export const createFunction = async (name, age, phone, address, navigate) => {
     });
   console.log(name, typeof age, typeof phone, address);
   return [message, variant];
+};
+
+export const deleteUserAxios = async (delId) => {
+  let message = "User Deleted";
+  let variant = "error";
+  try {
+    const deleteURL = `http://192.168.1.158:7000/api/deleteProfile/${delId}`;
+    console.log(delId);
+    let response = await axios.delete(deleteURL);
+    return [message, variant];
+  } catch {
+    message = "Some Error Occurred";
+    variant = "error";
+    console.log(delId, message);
+    return [message, variant];
+  }
 };

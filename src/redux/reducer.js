@@ -2,8 +2,7 @@ import {
   FETCH_USERS_REQUEST,
   FETCH_USERS_SUCCESS,
   FETCH_USERS_FAILURE,
-  DELETE_USER_FAILURE,
-  DELETE_USER_SUCCESS,
+  DELETE_USER,
 } from "./actionTypes";
 const initialState = {
   loading: false,
@@ -30,18 +29,13 @@ const reducer = (state = initialState, action) => {
         users: [],
         error: action.payload,
       };
-    case DELETE_USER_SUCCESS:
+    case DELETE_USER:
       const filteredUsers = state.users.filter(
         (user) => user._id !== action.payload._id
       );
       return {
         ...state,
         users: filteredUsers,
-      };
-    case DELETE_USER_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
       };
     default:
       return state;

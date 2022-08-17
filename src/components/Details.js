@@ -28,6 +28,8 @@ import { fetchUsers, deleteUser } from "../redux";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import MuiAlert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
+import { deleteUserAxios } from "../function/axiosFunctions";
+import { useDispatch } from "react-redux";
 
 function createData(id, name, age, mobile, address, modify) {
   return { id, name, age, mobile, address, modify };
@@ -46,12 +48,21 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
   const [openMessage, setOpenMessage] = React.useState(false);
   const [delId, setDelId] = useState("");
   let navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   const handleDelete = async () => {
-    let response = await delUser1(delId);
-    console.log(delId);
-    console.log(response);
     setOpen(false);
+
+    // Deleting in Server
+    let [message, variant] = await deleteUserAxios(delId);
+    enqueueSnackbar(message, { variant: variant });
+
+    // Deleting in Redux
+    dispatch(deleteUser(delId));
+
+    // delUser1(delId);
+    // console.log(delId);
   };
   const handleClose = () => {
     setOpen(false);
@@ -240,7 +251,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchUsers1: () => dispatch(fetchUsers()),
-    delUser1: (id) => dispatch(deleteUser(id)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Details);

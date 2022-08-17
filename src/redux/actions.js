@@ -2,8 +2,7 @@ import {
   FETCH_USERS_REQUEST,
   FETCH_USERS_SUCCESS,
   FETCH_USERS_FAILURE,
-  DELETE_USER_SUCCESS,
-  DELETE_USER_FAILURE,
+  DELETE_USER,
   PUSH_USER,
 } from "./actionTypes";
 import axios from "axios";
@@ -33,7 +32,7 @@ export const fetchUsers = () => {
     dispatch(fetchUsersRequest);
     axios
       // .get("https://jsonplaceholder.typicode.com/users")
-      .get("http://192.168.1.124:8000/api/getAllUsers")
+      .get("http://192.168.1.158:7000/api/getAllUsers")
       .then((res) => {
         const users = res.data.data;
         console.log(users);
@@ -46,42 +45,18 @@ export const fetchUsers = () => {
   };
 };
 
-const deleteUserSuccess = (id) => {
+const deleteUserById = (id) => {
   return {
-    type: DELETE_USER_SUCCESS,
+    type: DELETE_USER,
     payload: {
       _id: id,
     },
   };
 };
-const deleteUserFailure = (err) => {
-  return {
-    type: DELETE_USER_FAILURE,
-    payload: err,
-  };
-};
 
 export const deleteUser = (delId) => {
-  const deleteURL = `http://192.168.1.124:8000/api/deleteProfile/${delId}`;
-  // const deleteURL = `https://jsonplaceholder.typicode.com/users/${delId}`;
-  console.log(delId);
   return (dispatch) => {
-    axios
-      .delete(deleteURL)
-      .then((res) => {
-        console.log(res);
-        dispatch(deleteUserSuccess(delId));
-        // setOpen(false);
-        // setLocationMessage({ msg: "User Deleted", variant: "error" });
-        // refreshData();
-        // handleClick();
-        // enqueueSnackbar("User Deleted", { variant: "error" });
-      })
-      .catch((err) => {
-        console.log(err);
-        const errMsg = err.message;
-        dispatch(deleteUserFailure(errMsg));
-      });
+    dispatch(deleteUserById(delId));
   };
 };
 
