@@ -30,6 +30,7 @@ import MuiAlert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
 import { deleteUserAxios } from "../function/axiosFunctions";
 import { useDispatch } from "react-redux";
+import Pagination from "@mui/material/Pagination";
 
 function createData(id, name, age, mobile, address, modify) {
   return { id, name, age, mobile, address, modify };
@@ -50,6 +51,8 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
   let navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   const handleDelete = async () => {
     setOpen(false);
@@ -80,8 +83,9 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
   };
 
   useEffect(() => {
-    fetchUsers1();
-  }, []);
+    dispatch(fetchUsers(page));
+    // fetchUsers1(page);
+  }, [page]);
 
   const [locationMessage, setLocationMessage] = useState({
     msg: "",
@@ -130,6 +134,7 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
         {console.log(rows)}
         {/* {console.log(userData.users)} */}
         {console.log(userData.loading)}
+
         <div style={{ margin: "2% 20%" }}>
           <Stack
             justifyContent="flex-end"
@@ -137,6 +142,8 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
             direction="row"
             sx={{ mb: 2 }}
           >
+            <div>Total Count = {totalCount}</div>
+            <div>Page:{page}</div>
             <Link
               to="/newpage"
               style={{ textDecoration: "none" }}
@@ -150,41 +157,18 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
                 Add New
               </Button>
             </Link>
+            <Pagination
+              count={5}
+              showFirstButton
+              showLastButton
+              // defaultPage={1}
+              page={page}
+              onChange={(event, value) => {
+                setPage(value);
+              }}
+            />
           </Stack>
           <TableData rows={rows} />
-          {/* <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="center">Age</TableCell>
-                  <TableCell align="center">Mobile</TableCell>
-                  <TableCell align="center">Address</TableCell>
-                  <TableCell align="center"></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows
-                  ? rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="center">{row.age}</TableCell>
-                        <TableCell align="center">{row.mobile}</TableCell>
-                        <TableCell align="center">{row.address}</TableCell>
-                        <TableCell align="center">{row.modify}</TableCell>
-                      </TableRow>
-                    ))
-                  : ""}
-              </TableBody>
-            </Table>
-          </TableContainer> */}
 
           {/* Dialog Pop Up */}
           <Dialog
@@ -250,7 +234,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchUsers1: () => dispatch(fetchUsers()),
+    // fetchUsers1: () => dispatch(fetchUsers(page)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Details);

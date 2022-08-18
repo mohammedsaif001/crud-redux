@@ -27,12 +27,16 @@ const fetchUsersFailure = (error) => {
   };
 };
 
-export const fetchUsers = () => {
+export const fetchUsers = (page) => {
   return (dispatch) => {
+    let pageString = page.toString();
+    let sizeString = String(4);
     dispatch(fetchUsersRequest);
     axios
       // .get("https://jsonplaceholder.typicode.com/users")
-      .get("http://192.168.1.158:7000/api/getAllUsers")
+      .get(
+        `http://192.168.1.158:7000/api/getAllUsers?filters={}&page=${pageString}&size=${sizeString}`
+      )
       .then((res) => {
         const users = res.data.data;
         console.log(users);
