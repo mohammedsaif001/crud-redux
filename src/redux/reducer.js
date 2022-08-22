@@ -20,8 +20,9 @@ const reducer = (state = initialState, action) => {
     case FETCH_USERS_SUCCESS:
       return {
         loading: false,
-        users: action.payload,
+        users: action.payload.user,
         error: "",
+        totalCount: action.payload.totalcount,
       };
     case FETCH_USERS_FAILURE:
       return {

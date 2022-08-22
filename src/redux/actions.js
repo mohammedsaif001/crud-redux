@@ -13,10 +13,13 @@ export const fetchUsersRequest = () => {
   };
 };
 
-const fetchUsersSuccess = (user) => {
+const fetchUsersSuccess = ({ data, totalCount }) => {
   return {
     type: FETCH_USERS_SUCCESS,
-    payload: user,
+    payload: {
+      user: data,
+      totalcount: totalCount,
+    },
   };
 };
 
@@ -38,9 +41,9 @@ export const fetchUsers = (page) => {
         `http://192.168.1.158:7000/api/getAllUsers?filters={}&page=${pageString}&size=${sizeString}`
       )
       .then((res) => {
-        const users = res.data.data;
-        console.log(users);
-        dispatch(fetchUsersSuccess(users));
+        const { data, status, totalcount } = res.data;
+        console.log("==================", totalcount);
+        dispatch(fetchUsersSuccess({ data: data, totalCount: totalcount }));
       })
       .catch((err) => {
         const errMsg = err.message;

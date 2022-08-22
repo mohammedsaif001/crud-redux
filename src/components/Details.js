@@ -44,7 +44,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const Details = ({ userData, fetchUsers1, delUser1 }) => {
+const Details = ({ userData, totalCount }) => {
   const [open, setOpen] = React.useState(false);
   const [openMessage, setOpenMessage] = React.useState(false);
   const [delId, setDelId] = useState("");
@@ -52,7 +52,7 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
+  // const [totalCount, setTotalCount] = useState(0);
 
   const handleDelete = async () => {
     setOpen(false);
@@ -143,6 +143,7 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
             sx={{ mb: 2 }}
           >
             <div>Total Count = {totalCount}</div>
+            {console.log("From Return=========", totalCount)}
             <div>Page:{page}</div>
             <Link
               to="/newpage"
@@ -227,8 +228,10 @@ const Details = ({ userData, fetchUsers1, delUser1 }) => {
 };
 
 const mapStateToProps = (state) => {
+  console.log("=======state", state);
   return {
     userData: state.user,
+    totalCount: state.user.totalCount,
   };
 };
 
